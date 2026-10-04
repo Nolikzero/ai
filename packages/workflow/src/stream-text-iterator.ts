@@ -541,7 +541,11 @@ export async function* streamTextIterator({
         done =
           stopConditionMet ||
           (!hasClientToolCalls && pendingDeferredToolCallIds.size === 0);
-      } else if (finishReason === 'stop' || finishReason === 'tool-calls') {
+      } else if (
+        finishReason === 'stop' ||
+        finishReason === 'tool-calls' ||
+        finishReason === 'length'
+      ) {
         // Add assistant response content to the conversation
         const { content: assistantContent } = getAssistantMessageContent(step);
 
@@ -556,9 +560,6 @@ export async function* streamTextIterator({
           );
         }
 
-        done = true;
-      } else if (finishReason === 'length') {
-        // Model hit max tokens - stop but don't throw
         done = true;
       } else if (finishReason === 'content-filter') {
         // Content filter triggered - stop but don't throw

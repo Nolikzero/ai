@@ -980,7 +980,16 @@ function getAssistantMessageContent(step: StepResult<any, any>): {
         break;
       case 'text':
         if (part.text.length > 0) {
-          content.push({ type: 'text', text: part.text });
+          content.push({
+            type: 'text',
+            text: part.text,
+            ...(part.providerMetadata != null
+              ? {
+                  providerOptions:
+                    part.providerMetadata as SharedV4ProviderOptions,
+                }
+              : {}),
+          });
           contentIndex++;
         }
         break;
